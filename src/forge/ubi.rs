@@ -7,6 +7,7 @@ use crate::config::{Config, Settings};
 
 use crate::forge::{Forge, ForgeType};
 use crate::http::HTTP_FETCH;
+use itertools::Itertools;
 use url::Url;
 use crate::install_context::InstallContext;
 use crate::toolset::ToolVersion;
@@ -91,11 +92,19 @@ impl UBIForge {
     }
 }
 
+// TODO: allow to specify a binary based on URL only via UBI flag --url
+//   -u, --url <url>            The url of the file to download. This can be provided instead of a
+//   project or tag. This will not use the GitHub API, so you will never hit
+//   the GitHub API limits. This means you do not need to set a GITHUB_TOKEN
+//   env var except for private repos.
 fn get_binary_url(n: &str) -> eyre::Result<Url> {
     let n = n.to_lowercase();
-    let url = match n.len() {
-        1 => format!("https://api.github.com/repos/{n}/releases"),
-        _ => format!("https://api.github.com/repos/{n}/releases"),
+    let url = match n.split("/").try_len()? {
+        // Support GH shorthand
+        2 => format!("https://api.github.com/repos/{n}/releases"),
+        // Support GH longhand
+        // Support arbitrary URL link
+        _ => n,
     };
     Ok(url.parse()?)
 }
