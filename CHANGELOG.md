@@ -1,5 +1,16 @@
 # Changelog
 
+## [2024.4.6](https://github.com/jdx/mise/compare/v2024.4.5..v2024.4.6) - 2024-04-17
+
+### 🐛 Bug Fixes
+
+- **(gleam)** use asdf-community fork by Jesse Cooke in [06599d8](https://github.com/jdx/mise/commit/06599d8977baaa2a2db7e2d144939049bbe9d20b)
+
+### 📦️ Dependency Updates
+
+- update rust crate chrono to 0.4.38 by [@renovate[bot]](https://github.com/renovate[bot]) in [#1907](https://github.com/jdx/mise/pull/1907)
+- update rust crate serde_json to 1.0.116 by [@renovate[bot]](https://github.com/renovate[bot]) in [#1908](https://github.com/jdx/mise/pull/1908)
+
 ## [2024.4.5](https://github.com/jdx/mise/compare/v2024.4.3..v2024.4.5) - 2024-04-15
 
 ### 🚀 Features
