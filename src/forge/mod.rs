@@ -31,6 +31,7 @@ mod cargo;
 mod go;
 mod npm;
 mod ubi;
+mod pipx;
 
 pub type AForge = Arc<dyn Forge>;
 pub type ForgeMap = BTreeMap<ForgeArg, AForge>;
@@ -44,6 +45,7 @@ pub enum ForgeType {
     Go,
     Npm,
     Ubi,
+    Pipx,
 }
 
 static FORGES: Mutex<Option<ForgeMap>> = Mutex::new(None);
@@ -77,6 +79,7 @@ fn list_installed_forges() -> eyre::Result<ForgeList> {
                 ForgeType::Npm => Arc::new(npm::NPMForge::new(fa.clone())) as AForge,
                 ForgeType::Go => Arc::new(go::GoForge::new(fa.clone())) as AForge,
                 ForgeType::Ubi => Arc::new(ubi::UBIForge::new(fa.clone())) as AForge,
+                ForgeType::Pipx => Arc::new(pipx::PIPXForge::new(fa.clone())) as AForge,
             }
         })
         .filter(|f| f.fa().forge_type != ForgeType::Asdf)
@@ -102,6 +105,7 @@ pub fn get(fa: &ForgeArg) -> AForge {
                 ForgeType::Npm => Arc::new(npm::NPMForge::new(fa.clone())),
                 ForgeType::Go => Arc::new(go::GoForge::new(fa.clone())),
                 ForgeType::Ubi => Arc::new(ubi::UBIForge::new(fa.clone())),
+                ForgeType::Pipx => Arc::new(pipx::PIPXForge::new(fa.clone())),
             })
             .clone()
     }
