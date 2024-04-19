@@ -53,8 +53,7 @@ impl Forge for PIPXForge {
         let config = Config::try_get()?;
         let settings = Settings::get();
         settings.ensure_experimental("pipx backend")?;
-        let project_name = transform_project_name(self.name());
-
+        let project_name = transform_project_name(ctx, self.name());
         // Get environmental variable PATH and append to it
         // Path is listed correctly /Users/zph/.local/share/mise/installs/pipx-zph-runbook/latest/bin
         CmdLineRunner::new("pipx")
@@ -83,10 +82,18 @@ impl PIPXForge {
     }
 }
 
-fn transform_project_name(name: &str) -> String {
+// Used to normalize name because when `latest` the name should not include a ref for pipx
+// eg when passing user/project it should create git+https://github.com/user/project
+// NOT git+https://github.com/user/project@latest because pipx cannot handle that directive
+// If given a non-shorthand we treat it as intentional and do not transform it
+fn transform_project_name(ctx: &InstallContext, name: &str) -> String {
     let parts: Vec<&str> = name.split('/').collect();
     if parts.len() == 2 {
-        return format!("git+https://github.com/{}", name)
+        if ctx.tv.version != "latest" {
+            return format!("{}@{}", name, ctx.tv.version);
+        } else {
+            return format!("git+https://github.com/{}", name)
+        }
     } else {
         return name.to_string();
     }
