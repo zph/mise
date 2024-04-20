@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# shellcheck source-path=SCRIPTDIR
+source "$(dirname "$0")/assert.sh"
+
+export MISE_EXPERIMENTAL=1
+
+assert "mise x ubi:goreleaser/goreleaser@v1.25.0 -- goreleaser -v | grep 'GitVersion:'" "GitVersion:    1.25.0"
